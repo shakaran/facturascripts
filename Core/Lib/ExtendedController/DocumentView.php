@@ -33,6 +33,7 @@ use FacturaScripts\Core\Model\Proveedor;
  */
 class DocumentView extends BaseView
 {
+
     /**
      * Document calculator object.
      *
