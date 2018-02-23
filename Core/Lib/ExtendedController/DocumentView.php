@@ -19,12 +19,12 @@
 namespace FacturaScripts\Core\Lib\ExtendedController;
 
 use FacturaScripts\Core\Base\MiniLog;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\Base\Utils;
 use FacturaScripts\Core\Lib\DocumentCalculator;
 use FacturaScripts\Core\Lib\ExportManager;
 use FacturaScripts\Core\Model\Base\SalesDocumentLine;
+use FacturaScripts\Core\Model\Cliente;
+use FacturaScripts\Core\Model\Proveedor;
 
 /**
  * Description of DocumentView
@@ -121,7 +121,7 @@ class DocumentView extends BaseView
             }
             if ($item['type'] === 'number' || $item['type'] === 'money') {
                 $item['type'] = 'numeric';
-                $item['format'] = Base\DivisaTools::gridMoneyFormat();
+                $item['format'] = DivisaTools::gridMoneyFormat();
             }
             $data['columns'][] = $item;
         }
@@ -236,7 +236,7 @@ class DocumentView extends BaseView
             return $new ? 'NEW:' . $this->model->url() : $result;
         }
 
-        $miniLog = new Base\MiniLog();
+        $miniLog = new MiniLog();
         foreach ($miniLog->read() as $msg) {
             $result = $msg['message'];
         }
@@ -259,7 +259,7 @@ class DocumentView extends BaseView
             return 'OK';
         }
 
-        $cliente = new Model\Cliente();
+        $cliente = new Cliente();
         if ($cliente->loadFromCode($codcliente)) {
             $this->model->setCliente($cliente);
             return 'OK';
@@ -291,7 +291,7 @@ class DocumentView extends BaseView
             return 'OK';
         }
 
-        $proveedor = new Model\Proveedor();
+        $proveedor = new Proveedor();
         if ($proveedor->loadFromCode($codproveedor)) {
             $this->model->setProveedor($proveedor);
             return 'OK';
