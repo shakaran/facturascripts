@@ -18,6 +18,8 @@
  */
 namespace FacturaScripts\Core\Lib\ExtendedController;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Base\DivisaTools;
 use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\Base\Utils;
 use FacturaScripts\Core\Lib\DocumentCalculator;
@@ -152,9 +154,6 @@ class DocumentView extends BaseView
      *
      * @param bool  $code
      * @param array $where
-     * @param array $order
-     * @param int   $offset
-     * @param int   $limit
      */
     public function loadData($code = false, $where = [])
     {

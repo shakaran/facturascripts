@@ -66,13 +66,6 @@ class Contacto extends Base\Contact
     public $codagente;
 
     /**
-     * Primary key.
-     *
-     * @var string
-     */
-    public $codcontacto;
-
-    /**
      * Contact country.
      *
      * @var string
@@ -101,13 +94,21 @@ class Contacto extends Base\Contact
     public $empresa;
 
     /**
+     * Primary key.
+     *
+     * @var int
+     */
+    public $idcontacto;
+
+    /**
      * Contact province.
      *
      * @var string
      */
-    public $provincia;
+    public $ultima_comunicacion;
 
     /**
+==== BASE ====
      * Returns the name of the table that uses this model.
      *
      * @return string
@@ -124,7 +125,7 @@ class Contacto extends Base\Contact
      */
     public static function primaryColumn()
     {
-        return 'codcontacto';
+        return 'idcontacto';
     }
 
     /**

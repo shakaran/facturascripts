@@ -228,17 +228,32 @@ class Partida extends Base\ModelClass
         $this->debe = 0.0;
         $this->debeme = 0.0;
         $this->haber = 0.0;
-        $this->haberme = 0.0;
-
-        $this->baseimponible = 0.0;
-        $this->iva = 0.0;
-        $this->recargo = 0.0;
+==== BASE ====
+        $this->numero = 0;
+        $this->fecha = date('d-m-Y');
+        $this->saldo = 0.0;
+        $this->sum_debe = 0.0;
+        $this->sum_haber = 0.0;
     }
 
     /**
-     * Load de ID for subaccount
+     * Returns the sub-account of the departure.
+     *
+     * @return bool|mixed
+     */
+    public function getSubcuenta()
+    {
+        $subcuenta = new Subcuenta();
+
+        return $subcuenta->get($this->idsubcuenta);
+    }
+
+    /**
+     * Returns the url of the sub-account of the departure.
      *
      * @param string $code
+     * @param string $exercise
+     *
      * @return int|null
      */
     private function getIdSubAccount($code, $exercise)

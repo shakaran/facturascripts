@@ -33,18 +33,21 @@ class AppInstaller
 {
 
     /**
+     * Translation engine.
      *
      * @var Translator
      */
     private $i18n;
 
     /**
+     * App log manager.
      *
      * @var MiniLog
      */
     private $miniLog;
 
     /**
+     * Request on which we can get data.
      *
      * @var Request
      */
@@ -70,6 +73,8 @@ class AppInstaller
 
         if ($installed) {
             header('Location: ' . $this->getUri());
+        } elseif ('TRUE' === $this->request->get('phpinfo', '')) {
+            phpinfo();
         } else {
             $this->render();
         }
@@ -280,11 +285,6 @@ class AppInstaller
     {
         $errors = false;
 
-        if ((int) substr(phpversion(), 0, 1) < 7) {
-            $this->miniLog->critical($this->i18n->trans('old-php-version'));
-            $errors = true;
-        }
-
         if ((float) '3,1' >= (float) '3.1') {
             $this->miniLog->critical($this->i18n->trans('wrong-decimal-separator'));
             $errors = true;
@@ -295,19 +295,11 @@ class AppInstaller
             $errors = true;
         }
 
-        if (!extension_loaded('simplexml')) {
-            $this->miniLog->critical($this->i18n->trans('simplexml-not-found'));
-            $errors = true;
-        }
-
-        if (!extension_loaded('openssl')) {
-            $this->miniLog->critical($this->i18n->trans('openssl-not-found'));
-            $errors = true;
-        }
-
-        if (!extension_loaded('zip')) {
-            $this->miniLog->critical($this->i18n->trans('ziparchive-not-found'));
-            $errors = true;
+        foreach (['bcmath', 'curl', 'simplexml', 'openssl', 'zip'] as $extension) {
+            if (!extension_loaded($extension)) {
+                $this->miniLog->critical($this->i18n->trans('php-extension-not-found', ['%extension%' => $extension]));
+                $errors = true;
+            }
         }
 
         if (!is_writable(FS_FOLDER)) {

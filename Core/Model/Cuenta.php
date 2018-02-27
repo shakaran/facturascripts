@@ -140,6 +140,34 @@ class Cuenta extends Base\ModelClass
         return false;
     }
 
+    /**
+     * TODO: Uncomplete documentation
+     *
+     * @return bool
+     */
+    private function testErrorInAccount(): bool
+    {
+==== BASE ====
+        $where = [
+            new DataBaseWhere('codejercicio', $this->codejercicio),
+            new DataBaseWhere('codcuenta', $this->parent_codcuenta)
+        ];
+
+        $account = $this->getAccountWithCondition($where);
+        if (isset($account)) {
+            $this->parent_idcuenta = $account->idcuenta;
+            return TRUE;
+        }
+
+        $this->parent_idcuenta = $account[0]->parent_idcuenta;
+        return false;
+    }
+
+    /**
+     * TODO: Uncomplete documentation
+     *
+     * @return bool
+     */
     private function testErrorInAccount(): bool
     {
         return empty($this->codcuenta) || empty($this->descripcion) || empty($this->codejercicio);

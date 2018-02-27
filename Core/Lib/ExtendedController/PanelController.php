@@ -462,6 +462,24 @@ abstract class PanelController extends Base\Controller
     }
 
     /**
+     * Adds a Grid type view to the controller
+     *
+     * @param $parentView
+     * @param $modelName
+     * @param $viewName
+     * @param $viewTitle
+     * @param string $viewIcon
+     */
+    protected function addGridView($parentView, $modelName, $viewName, $viewTitle, $viewIcon = 'fa-list')
+    {
+        $parent = $this->views[$parentView];
+        if (isset($parent)) {
+            $view = new GridView($parent, $viewTitle, $modelName, $viewName, $this->user->nick);
+            $this->addView($viewName, $view, $viewIcon);
+        }
+    }
+
+    /**
      * Adds a HTML type view to the controller
      *
      * @param string $fileName
