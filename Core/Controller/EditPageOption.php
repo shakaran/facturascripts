@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of FacturaScripts
  * Copyright (C) 2017-2018  Carlos Garcia Gomez  <carlos@facturascripts.com>
@@ -27,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Carlos García Gómez <carlos@facturascripts.com>
  * @author Artex Trading sa <jcuello@artextrading.com>
+ * @author Fco. Antonio Moreno Pérez <famphuelva@gmail.com>
  */
 class EditPageOption extends Base\Controller
 {
@@ -51,7 +53,7 @@ class EditPageOption extends Base\Controller
      * @var Model\PageOption
      */
     public $model;
-
+   
     /**
      * Initialize all objects and properties.
      *
@@ -60,8 +62,7 @@ class EditPageOption extends Base\Controller
      * @param MiniLog    $miniLog
      * @param string     $className
      */
-    public function __construct(&$cache, &$i18n, &$miniLog, $className)
-    {
+    public function __construct(&$cache, &$i18n, &$miniLog, $className) {
         parent::__construct($cache, $i18n, $miniLog, $className);
         $this->setTemplate('EditPageOption');
         $this->model = new Model\PageOption();
@@ -70,8 +71,7 @@ class EditPageOption extends Base\Controller
     /**
      * Load and initialize the parameters sent by the form
      */
-    private function getParams()
-    {
+    private function getParams() {
         $this->selectedViewName = $this->request->get('code');
         $this->selectedUser = $this->user->admin ? $this->request->get('nick', null) : $this->user->nick;
     }
@@ -83,15 +83,19 @@ class EditPageOption extends Base\Controller
      * @param Model\User                 $user
      * @param Base\ControllerPermissions $permissions
      */
-    public function privateCore(&$response, $user, $permissions)
-    {
+    public function privateCore(&$response, $user, $permissions) {
         parent::privateCore($response, $user, $permissions);
-
+         
         $this->getParams();
         $this->model->getForUser($this->selectedViewName, $this->selectedUser);
-
-        if ($this->request->get('action', '') === 'save') {
-            $this->saveData();
+        $get = $this->request->get('action', '');
+        switch ($get){
+            case 'save':
+                $this->saveData();
+                break;
+            case 'delete':
+                $this->deleteData();
+                break;
         }
     }
 
@@ -100,8 +104,7 @@ class EditPageOption extends Base\Controller
      * It determines if we edit a configuration for all the users or one,
      * and if there is already configuration for the nick
      */
-    private function checkNickAndID()
-    {
+    private function checkNickAndID() {
         if ($this->model->nick != $this->selectedUser) {
             $this->model->id = null;
             $this->model->nick = empty($this->selectedUser) ? null : $this->selectedUser;
@@ -115,8 +118,7 @@ class EditPageOption extends Base\Controller
     /**
      * Save new configuration for view
      */
-    private function saveData()
-    {
+    private function saveData() {
         $this->checkNickAndID();
         $data = $this->request->request->all();
         foreach ($data as $key => $value) {
@@ -133,14 +135,43 @@ class EditPageOption extends Base\Controller
         }
         $this->miniLog->alert($this->i18n->trans('data-save-error'));
     }
+    
+    /**
+     * Delete configuration for view
+     */
+    private function deleteData(){
+        $nick = $this->request->get('nick');
+        if (!$nick){            
+            $where = [
+                new Base\DataBase\DataBaseWhere('nick', 'null', 'IS'),
+                new Base\DataBase\DataBaseWhere('name', $this->selectedViewName)
+            ];            
+        }
+        else {
+            $where = [
+                new Base\DataBase\DataBaseWhere('nick', $nick),
+                new Base\DataBase\DataBaseWhere('name', $this->selectedViewName)
+            ];            
+        }
+        
+        $id = $this->model->all($where, [], 0, 0);
+        
+            if ($id[0] && $id[0]->delete()) {
+                $this->miniLog->notice($this->i18n->trans('record-deleted-correctly'));
+                $this->model->getForUser($this->selectedViewName, $this->selectedUser);
+            } 
+            else {
+                $this->miniLog->alert($this->i18n->trans('default-not-deletable'));
+            }
+          
+        }
 
     /**
      * Returns basic page attributes
      *
      * @return array
      */
-    public function getPageData()
-    {
+    public function getPageData() {
         $pagedata = parent::getPageData();
         $pagedata['title'] = 'page-configuration';
         $pagedata['menu'] = 'admin';
@@ -155,8 +186,7 @@ class EditPageOption extends Base\Controller
      *
      * @return string
      */
-    public function getPanelHeader()
-    {
+    public function getPanelHeader() {
         return $this->i18n->trans('configure-columns');
     }
 
@@ -165,12 +195,11 @@ class EditPageOption extends Base\Controller
      *
      * @return string
      */
-    public function getPanelFooter()
-    {
+    public function getPanelFooter() {
         return '<strong>'
-            . $this->i18n->trans('page') . ':&nbsp;' . $this->selectedViewName . '<br>'
-            . $this->i18n->trans('user') . ':&nbsp;' . $this->selectedUser
-            . '</strong>';
+                . $this->i18n->trans('page') . ':&nbsp;' . $this->selectedViewName . '<br>'
+                . $this->i18n->trans('user') . ':&nbsp;' . $this->selectedUser
+                . '</strong>';
     }
 
     /**
@@ -178,8 +207,7 @@ class EditPageOption extends Base\Controller
      *
      * @return Array
      */
-    public function getUserList()
-    {
+    public function getUserList() {
         $result = [];
         $users = Model\CodeModel::all(Model\User::tableName(), 'nick', 'nick', false);
         foreach ($users as $codeModel) {
@@ -190,4 +218,5 @@ class EditPageOption extends Base\Controller
 
         return $result;
     }
+
 }

@@ -615,16 +615,5 @@
     "data-source": "Origin data",
     "chart": "Chart",
     "others-filters": "Others filters",
-    "debit": "Debit",
-    "credit": "Credit",
-    "balance": "Balance",
-    "offsetting-account": "Offsetting account",
-    "offsetting": "Offsetting",
-    "accounting-entry": "Accounting Entry",
-    "concept": "Concept",
-    "lock-unlock": "Lock-Unlock",
-    "clone": "Clone",
-    "predefined-concepts": "Predefined Concepts",
-    "unbalance": "Unbalance",
-    "account-balance": "Account Balance"
+    "default-not-deletable": "Default configuration can't be deleted"
 }
