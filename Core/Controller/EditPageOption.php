@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Core\Controller;
 
 use FacturaScripts\Core\Base;
@@ -30,8 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Artex Trading sa <jcuello@artextrading.com>
  * @author Fco. Antonio Moreno Pérez <famphuelva@gmail.com>
  */
-class EditPageOption extends Base\Controller 
-{
+class EditPageOption extends Base\Controller {
 
     /**
      * Selected user, for which the controller columns are created or modified
@@ -53,7 +53,7 @@ class EditPageOption extends Base\Controller
      * @var Model\PageOption
      */
     public $model;
-   
+
     /**
      * Initialize all objects and properties.
      *
@@ -88,11 +88,11 @@ class EditPageOption extends Base\Controller
      */
     public function privateCore(&$response, $user, $permissions) {
         parent::privateCore($response, $user, $permissions);
-         
+
         $this->getParams();
         $this->model->getForUser($this->selectedViewName, $this->selectedUser);
         $get = $this->request->get('action', '');
-        switch ($get){
+        switch ($get) {
             case 'save':
                 $this->saveData();
                 break;
@@ -138,37 +138,33 @@ class EditPageOption extends Base\Controller
         }
         $this->miniLog->alert($this->i18n->trans('data-save-error'));
     }
-    
+
     /**
      * Delete configuration for view
      */
-    private function deleteData()
-        {
+    private function deleteData() {
         $nick = $this->request->get('nick');
-        if (!$nick){            
+        if (!$nick) {
             $where = [
                 new Base\DataBase\DataBaseWhere('nick', 'null', 'IS'),
                 new Base\DataBase\DataBaseWhere('name', $this->selectedViewName)
-            ];            
-        }
-        else {
+            ];
+        } else {
             $where = [
                 new Base\DataBase\DataBaseWhere('nick', $nick),
                 new Base\DataBase\DataBaseWhere('name', $this->selectedViewName)
-            ];            
+            ];
         }
-        
+
         $id_all = $this->model->all($where, [], 0, 0);
-        
-            if ($id_all[0] && $id_all[0]->delete()) {
-                $this->miniLog->notice($this->i18n->trans('record-deleted-correctly'));
-                $this->model->getForUser($this->selectedViewName, $this->selectedUser);
-            } 
-            else {
-                $this->miniLog->alert($this->i18n->trans('default-not-deletable'));
-            }
-          
+
+        if ($id_all[0] && $id_all[0]->delete()) {
+            $this->miniLog->notice($this->i18n->trans('record-deleted-correctly'));
+            $this->model->getForUser($this->selectedViewName, $this->selectedUser);
+        } else {
+            $this->miniLog->alert($this->i18n->trans('default-not-deletable'));
         }
+    }
 
     /**
      * Returns basic page attributes
