@@ -48,7 +48,11 @@ class FacturaProveedor extends Base\PurchaseDocument
      */
     public static function primaryColumn()
     {
-        return 'idfactura';
+        $lineaModel = new LineaFacturaProveedor();
+        $where = [new DataBaseWhere('idfactura', $this->idfactura)];
+        $order = ['orden' => 'DESC', 'idlinea' => 'ASC'];
+
+        return $lineaModel->all($where, $order, 0, 0);
     }
 
     /**

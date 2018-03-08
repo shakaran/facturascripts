@@ -41,7 +41,14 @@ class PedidoProveedor extends Base\PurchaseDocument
      *
      * @var int
      */
-    public $idalbaran;
+    public function getLines()
+    {
+        $lineaModel = new LineaPedidoProveedor();
+        $where = [new DataBaseWhere('idpedido', $this->idpedido)];
+        $order = ['orden' => 'DESC', 'idlinea' => 'ASC'];
+
+        return $lineaModel->all($where, $order, 0, 0);
+    }
 
     /**
      * Returns the name of the table that uses this model.

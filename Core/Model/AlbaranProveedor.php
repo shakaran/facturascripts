@@ -53,7 +53,11 @@ class AlbaranProveedor extends Base\PurchaseDocument
      */
     public static function tableName()
     {
-        return 'albaranesprov';
+        $lineaModel = new LineaAlbaranProveedor();
+        $where = [new DataBaseWhere('idalbaran', $this->idalbaran)];
+        $order = ['orden' => 'DESC', 'idlinea' => 'ASC'];
+
+        return $lineaModel->all($where, $order, 0, 0);
     }
 
     /**
