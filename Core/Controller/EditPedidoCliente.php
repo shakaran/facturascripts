@@ -45,7 +45,11 @@ class EditPedidoCliente extends ExtendedController\DocumentController
      */
     protected function getDocumentClassName()
     {
-        return '\FacturaScripts\Dinamic\Model\PedidoCliente';
+        parent::createViews();
+
+        $modelName = $this->getModelClassName();
+        $viewName = 'Edit' . $modelName;
+        $this->addEditView($modelName, $viewName, 'detail');
     }
 
     /**

@@ -45,7 +45,11 @@ class EditFacturaCliente extends ExtendedController\DocumentController
      */
     protected function getDocumentClassName()
     {
-        return '\FacturaScripts\Dinamic\Model\FacturaCliente';
+        parent::createViews();
+
+        $modelName = $this->getModelClassName();
+        $viewName = 'Edit' . $modelName;
+        $this->addEditView($modelName, $viewName, 'detail', 'fa-edit');
     }
 
     /**

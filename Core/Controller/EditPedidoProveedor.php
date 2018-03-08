@@ -46,7 +46,11 @@ class EditPedidoProveedor extends ExtendedController\DocumentController
      */
     protected function getDocumentClassName()
     {
-        return '\FacturaScripts\Dinamic\Model\PedidoProveedor';
+        parent::createViews();
+
+        $modelName = $this->getModelClassName();
+        $viewName = 'Edit' . $modelName;
+        $this->addEditView($modelName, $viewName, 'detail', 'fa-edit');
     }
 
     /**

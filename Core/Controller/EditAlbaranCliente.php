@@ -42,9 +42,13 @@ class EditAlbaranCliente extends ExtendedController\DocumentController
      *
      * @return string
      */
-    protected function getDocumentClassName()
+    protected function createViews()
     {
-        return '\FacturaScripts\Dinamic\Model\AlbaranCliente';
+        parent::createViews();
+
+        $modelName = $this->getModelClassName();
+        $viewName = 'Edit' . $modelName;
+        $this->addEditView($modelName, $viewName, 'detail', 'fa-edit');
     }
 
     /**
