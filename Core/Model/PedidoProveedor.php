@@ -48,7 +48,14 @@ class PedidoProveedor extends Base\PurchaseDocument
      *
      * @return string
      */
-    public static function tableName()
+    public function getNewLine(array $data = [])
+    {
+        $newLine = new LineaPedidoProveedor($data);
+        $newLine->idpedido = $this->idpedido;
+        return $newLine;
+    }
+    
+    public function install()
     {
         return 'pedidosprov';
     }

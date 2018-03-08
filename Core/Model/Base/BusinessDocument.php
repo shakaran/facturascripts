@@ -202,7 +202,28 @@ abstract class BusinessDocument extends ModelClass
      *
      * @return mixed
      */
-    abstract public function getLineas();
+    abstract public function getLines();
+
+    /**
+     * Returns a new line for this business document.
+     * 
+     * @param array $data
+     * 
+     * @return BusinessDocumentLine[]
+     */
+    abstract public function getNewLine(array $data = []);
+
+    /**
+     * Returns an array with the column for identify the subject(s),
+     * 
+     * @return BusinessDocumentLine
+     */
+    abstract public function getSubjectColumns();
+
+    /**
+     * Sets subjects for this document.
+     */
+    abstract public function setSubject($subjects);
 
     /**
      * Reset the values of all model properties.

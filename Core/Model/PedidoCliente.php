@@ -65,7 +65,14 @@ class PedidoCliente extends Base\SalesDocument
      *
      * @return string
      */
-    public static function primaryColumn()
+    public function getNewLine(array $data = [])
+    {
+        $newLine = new LineaPedidoCliente($data);
+        $newLine->idpedido = $this->idpedido;
+        return $newLine;
+    }
+    
+    public function install()
     {
         return 'idpedido';
     }

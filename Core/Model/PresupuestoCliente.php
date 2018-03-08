@@ -73,7 +73,14 @@ class PresupuestoCliente extends Base\SalesDocument
     /**
      * Reset the values of all model properties.
      */
-    public function clear()
+    public function getNewLine(array $data = [])
+    {
+        $newLine = new LineaPresupuestoCliente($data);
+        $newLine->idpresupuesto = $this->idpresupuesto;
+        return $newLine;
+    }
+    
+    public function install()
     {
         parent::clear();
         $this->finoferta = date('d-m-Y', strtotime(date('d-m-Y') . ' +1 month'));

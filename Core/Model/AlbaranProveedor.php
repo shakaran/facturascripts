@@ -61,7 +61,7 @@ class AlbaranProveedor extends Base\PurchaseDocument
      *
      * @return string
      */
-    public static function primaryColumn()
+    public function getNewLine(array $data = [])
     {
         return 'idalbaran';
     }

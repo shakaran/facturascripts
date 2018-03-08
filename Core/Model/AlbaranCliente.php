@@ -61,7 +61,7 @@ class AlbaranCliente extends Base\SalesDocument
      *
      * @return string
      */
-    public static function primaryColumn()
+    public function getNewLine(array $data = [])
     {
         return 'idalbaran';
     }
