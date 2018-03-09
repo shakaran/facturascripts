@@ -166,5 +166,9 @@ $(document).ready(function () {
     });
 
     Handsontable.hooks.add('beforeChange', beforeChange);
-    Handsontable.hooks.add('afterChange', documentCalculate);
+    Handsontable.hooks.add('afterChange', documentRecalculate);
+
+    $("#doc_codserie").change(function () {
+        documentRecalculate();
+    });
 });
