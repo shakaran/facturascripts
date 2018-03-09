@@ -20,51 +20,64 @@
 namespace FacturaScripts\Core\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Dinamic\Model\LineaPresupuestoProveedor;
 
 /**
  * Supplier order.
  */
-class PedidoProveedor extends Base\PurchaseDocument
+class PresupuestoProveedor extends Base\PurchaseDocument
 {
 
     use Base\ModelTrait;
-
-    /**
-     * Primary key.
-     *
-     * @var int
-     */
-    public $idpedido;
 
     /**
      * Related delivery note ID.
      *
      * @var int
      */
+    public $idalbaran;
+
+    /**
+     * Primary key.
+     *
+     * @var int
+     */
+    public $idpresupuesto;
+
+    /**
+     * Returns the lines associated with the order.
+     *
+     * @return LineaPresupuestoProveedor[]
+     */
     public function getLines()
     {
-        $lineaModel = new LineaPedidoProveedor();
-        $where = [new DataBaseWhere('idpedido', $this->idpedido)];
+        $lineaModel = new LineaPresupuestoProveedor();
+        $where = [new DataBaseWhere('idpresupuesto', $this->idpresupuesto)];
         $order = ['orden' => 'DESC', 'idlinea' => 'ASC'];
 
         return $lineaModel->all($where, $order, 0, 0);
     }
 
     /**
-     * Returns the name of the table that uses this model.
+     * Returns a new line for this document.
+     * 
+     * @param array $data
      *
-     * @return string
+     * @return LineaPresupuestoProveedor
      */
     public function getNewLine(array $data = [])
     {
-        $newLine = new LineaPedidoProveedor($data);
-        $newLine->idpedido = $this->idpedido;
+        $newLine = new LineaPresupuestoProveedor($data);
+        $newLine->idpresupuesto = $this->idpresupuesto;
         return $newLine;
     }
-    
+
     public function install()
     {
-        return 'pedidosprov';
+        parent::install();
+        new AlbaranProveedor();
+
+        return '';
     }
 
     /**
@@ -74,19 +87,16 @@ class PedidoProveedor extends Base\PurchaseDocument
      */
     public static function primaryColumn()
     {
-        return 'idpedido';
+        return 'idpresupuesto';
     }
 
     /**
-     * Returns the lines associated with the order.
+     * Returns the name of the table that uses this model.
      *
-     * @return LineaPedidoProveedor[]
+     * @return string
      */
-    public function getLineas()
+    public static function tableName()
     {
-        $lineaModel = new LineaPedidoProveedor();
-        $where = [new DataBaseWhere('idpedido', $this->idpedido)];
-
-        return $lineaModel->all($where, [], 0, 0);
+        return 'presupuestosprov';
     }
 }
