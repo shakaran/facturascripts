@@ -40,7 +40,7 @@ class DocumentView extends BaseView
     /**
      * Document calculator object.
      *
-     * @var EstadoDocumento
+     * @var array
      */
     private $calculator;
 
