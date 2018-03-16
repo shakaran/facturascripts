@@ -22,11 +22,12 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Base\DivisaTools;
 use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\Base\Utils;
-use FacturaScripts\Core\Lib\ExportManager;
-use FacturaScripts\Core\Model\Base\SalesDocumentLine;
-use FacturaScripts\Core\Model\Cliente;
-use FacturaScripts\Core\Model\Proveedor;
-use FacturaScripts\Dinamic\Lib\DocumentCalculator;
+use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
+use FacturaScripts\Dinamic\Lib\ExportManager;
+use FacturaScripts\Dinamic\Model\Base\BusinessDocumentLine;
+use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\EstadoDocumento;
+use FacturaScripts\Dinamic\Model\Proveedor;
 
 /**
  * Description of DocumentView
@@ -39,7 +40,7 @@ class DocumentView extends BaseView
     /**
      * Document calculator object.
      *
-     * @var DocumentCalculator
+     * @var EstadoDocumento
      */
     private $calculator;
 
@@ -83,8 +84,9 @@ class DocumentView extends BaseView
     public function __construct($title, $modelName, $lineModelName, $lineXMLView, $userNick)
     {
         parent::__construct($title, $modelName);
-        $this->calculator = new DocumentCalculator();
-        $this->documentType = 'sale';
+==== BASE ====
+        $this->documentTools = new BusinessDocumentTools();
+==== BASE ====
 
         // Loads the view configuration for the user
         $this->pageOption->getForUser($lineXMLView, $userNick);
@@ -179,6 +181,9 @@ class DocumentView extends BaseView
         $this->count = empty($this->model->primaryColumnValue()) ? 0 : 1;
         $this->lines = empty($this->model->primaryColumnValue()) ? [] : $this->model->getLineas();
         $this->title = $this->model->codigo;
+
+        $estadoDocModel = new EstadoDocumento();
+        $this->documentStates = $estadoDocModel->all([new DataBaseWhere('tipodoc', $this->model->modelClassName())], ['nombre' => 'ASC'], 0, 0);
     }
 
     /**
@@ -364,15 +369,6 @@ class DocumentView extends BaseView
         }
 
         return $result;
-    }
-
-    /**
-     * Set new code to the document.
-     */
-    public function setNewCode()
-    {
-        /// this can be eliminated when the error is fixed when calculating
-        /// a new code when the primary key is numeric
     }
 
     /**
