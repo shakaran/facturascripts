@@ -98,6 +98,11 @@ class DocumentView extends BaseView
         }
 
         $this->lines = [];
+
+        // Loads document states
+        $estadoDocModel = new EstadoDocumento();
+        $modelClass = explode('\\', $modelName);
+        $this->documentStates = $estadoDocModel->all([new DataBaseWhere('tipodoc', end($modelClass))], ['nombre' => 'ASC'], 0, 0);
     }
 
     /**
@@ -181,9 +186,6 @@ class DocumentView extends BaseView
         $this->count = empty($this->model->primaryColumnValue()) ? 0 : 1;
         $this->lines = empty($this->model->primaryColumnValue()) ? [] : $this->model->getLineas();
         $this->title = $this->model->codigo;
-
-        $estadoDocModel = new EstadoDocumento();
-        $this->documentStates = $estadoDocModel->all([new DataBaseWhere('tipodoc', $this->model->modelClassName())], ['nombre' => 'ASC'], 0, 0);
     }
 
     /**
