@@ -147,8 +147,10 @@
                         </div>
                     </div>
                 </div>
-                {# -- Adds print and export options -- #}
-                {{ exportData(fsc, i18n, 'edit') }}
+                {% if fsc.hasData %}
+                    {# -- Adds print and export options -- #}
+                    {{ exportData(fsc, i18n, 'edit') }}
+                {% endif %}
             </div>
             <div class="col-6 text-right">
                 <h2>
