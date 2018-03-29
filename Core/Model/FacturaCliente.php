@@ -56,9 +56,13 @@ class FacturaCliente extends Base\SalesDocument
      */
     public function getNewLine(array $data = [])
     {
-        parent::clear();
-        $this->anulada = false;
-        $this->pagada = false;
+        $newLine = new LineaFacturaCliente($data);
+        $newLine->idfactura = $this->idfactura;
+        
+        $state = $this->getState();
+        $newLine->actualizastock = $state->actualizastock;
+        
+        return $newLine;
     }
 
     /**
