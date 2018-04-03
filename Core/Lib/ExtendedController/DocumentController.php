@@ -50,6 +50,27 @@ abstract class DocumentController extends PanelController
     }
 
     /**
+     * Returns an array with all data from selected model.
+     *
+     * @param string $modelName
+     *
+     * @return mixed
+     */
+    public function getSelectValues($modelName)
+    {
+        $values = [];
+        $modelName = '\FacturaScripts\Dinamic\Model\\' . $modelName;
+        $model = new $modelName();
+
+        $order = [$model->primaryDescriptionColumn() => 'ASC'];
+        foreach ($model->all([], $order, 0, self::ITEM_SELECT_LIMIT) as $newModel) {
+            $values[$newModel->primaryColumnValue()] = $newModel->primaryDescription();
+        }
+
+        return $values;
+    }
+
+    /**
      * Load views and document.
      */
     protected function createViews()
@@ -112,6 +133,16 @@ abstract class DocumentController extends PanelController
     }
 
     /**
+     * Return the name of the xml file with the column configuration por lines.
+     *
+     * @return string
+     */
+    protected function getLineXMLView()
+    {
+        return 'CommonLineasDocumento';
+    }
+
+    /**
      * Load view data procedure
      *
      * @param string   $keyView
@@ -123,50 +154,5 @@ abstract class DocumentController extends PanelController
         if ($keyView === 'Document' && !empty($iddoc)) {
             $view->loadData($iddoc);
         }
-    }
-
-    /**
-     * Return the document class name.
-     *
-     * @return string
-     */
-    abstract protected function getDocumentClassName();
-
-    /**
-     * Return the document line class name.
-     *
-     * @return string
-     */
-    abstract protected function getDocumentLineClassName();
-
-    /**
-     * Return the name of the xml file with the column configuration por lines.
-     *
-     * @return string
-     */
-    protected function getLineXMLView()
-    {
-        return 'CommonLineasDocumento';
-    }
-
-    /**
-     * Returns an array with all data from selected model.
-     *
-     * @param string $modelName
-     *
-     * @return mixed
-     */
-    public function getSelectValues($modelName)
-    {
-        $values = [];
-        $modelName = '\FacturaScripts\Dinamic\Model\\' . $modelName;
-        $model = new $modelName();
-
-        $order = [$model->primaryDescriptionColumn() => 'ASC'];
-        foreach ($model->all([], $order, 0, self::ITEM_SELECT_LIMIT) as $newModel) {
-            $values[$newModel->primaryColumnValue()] = $newModel->primaryDescription();
-        }
-
-        return $values;
     }
 }
