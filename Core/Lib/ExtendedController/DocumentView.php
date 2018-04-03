@@ -176,7 +176,6 @@ class DocumentView extends BaseView
         }
 
         if (is_array($code)) {
-            $where = [];
             foreach ($code as $fieldName => $value) {
                 $where[] = new DataBaseWhere($fieldName, $value);
             }
