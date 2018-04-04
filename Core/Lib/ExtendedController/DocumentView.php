@@ -226,8 +226,9 @@ class DocumentView extends BaseView
             return $result;
         }
 
+        $exists = $this->model->exists();
         if ($this->save()) {
-            $result = $this->model->editable ? $this->saveLines($newLines) : 'OK';
+            $result = ($this->model->editable || !$exists) ? $this->saveLines($newLines) : 'OK';
         } else {
             $result = 'ERROR';
         }
